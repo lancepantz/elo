@@ -1,0 +1,63 @@
+playerB playerA outcome
+justin aaron A
+lance justin A
+chun chris B
+chun chris
+chun chris A
+chun justin A
+chun justin B
+chun justin A
+michael aaron B
+michael aaron B
+chris aaron A
+chris aaron A
+chris justin A
+chris justin B
+justin aaron A
+lance justin A
+chun chris B
+chun chris
+chun chris A
+chun justin A
+chun justin B
+chun justin A
+chun chris
+michael aaron B
+michael aaron B
+chris aaron A
+chris aaron A
+chris justin A
+eric justin B
+eric justin B
+eric justin B
+chris justin B
+justin amos A
+justin eric A
+justin aaron A
+lance justin A
+chun chris B
+chun chris
+chun chris A
+chun justin A
+chun justin B
+chun justin A
+chun chris
+michael aaron B
+michael aaron B
+chris aaron A
+chris aaron A
+chris justin A
+eric justin B
+eric justin B
+eric justin B
+chris justin B
+justin amos A
+justin eric A
+c++ clojure A
+c++ java A
+c++ justin A
+c++ chun A
+c++ chris A
+c++ aaron A
+c++ 撮りためた A
+

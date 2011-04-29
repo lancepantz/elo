@@ -1,0 +1,63 @@
+(ns elo.core
+  (:require [clojure.string :as str]))
+
+(def start 1000)
+
+(defn read-file [fn]
+  (str/split-lines (slurp fn)))
+
+(defn parse-line [l]
+  (str/split l #"\s"))
+
+(defn assoc-head [ks result-line]
+  (into {} (map vector ks result-line)))
+
+(defn get-scores [results]
+  (reduce (fn [acc line]
+            (into acc {(line "playerB") start (line "playerA") start}))
+          {}
+          results))
+
+(defn invert [s]
+  (if (= s "A")
+    "B"
+    "A"))
+
+(defn new-score [current player opponent won]
+  (prn :current current)
+  (prn :player player)
+  (prn :op opponent)
+  (prn :won won)
+  (let [ret
+        (+  (* 400 (if won 1 -1))
+            (current opponent))]
+    (prn :ret ret)
+    ret
+    ))
+
+{:me {:you 1}}
+
+; this part written by Lance, that's why it's so sloppy!
+(defn go []
+  (let [results (map parse-line (read-file "/Users/lance/code/elo/sample.txt"))
+        keys (first results)
+        results (map (partial assoc-head keys) (rest results))
+        scores (atom (get-scores results))]
+    (doseq [game results]
+      (prn :game game)
+      (if (nil? (game "outcome"))
+        (let [a (@scores (game "playerA"))
+              b (@scores (game "playerb"))]
+          (swap! scores assoc (game "playerA") b)
+          (swap! scores assoc (game "playerB") a))
+        (let [winner-key (game (str "player" (game "outcome")))
+              loser-key (game (str "player" (invert (game "outcome"))))
+              foo (prn :wk winner-key)
+              foo (prn :lk loser-key)
+              winner-value (new-score @scores winner-key loser-key true)
+              loser-value (new-score @scores loser-key winner-key false)
+              foo (prn :wv winner-value)
+              foo (prn :lv loser-value)]
+          (swap! scores assoc winner-key winner-value loser-key loser-value))))
+    (prn @scores)))
+
