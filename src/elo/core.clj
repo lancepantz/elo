@@ -1,43 +1,47 @@
 (ns elo.core
-  (:require [clojure.string :as str]))
+  (:require [clojure.string :as str])
+  (:use clojure.contrib.math)
+  )
 
-(def start 1000)
+(def initial-rating 1500)
+(def k-factor 15)
 
 (defn read-file [fn]
   (str/split-lines (slurp fn)))
 
 (defn parse-line [l]
-  (str/split l #"\s"))
+  (str/split (str/upper-case l) #"\s"))
 
-(defn assoc-head [ks result-line]
-  (into {} (map vector ks result-line)))
+(defn assoc-head [keys result-line]
+  (into {} (map vector keys result-line)))
 
-(defn get-scores [results]
+(defn init-ratings [results]
   (reduce (fn [acc line]
-            (into acc {(line "playerB") start (line "playerA") start}))
+            (into acc {(line "PLAYERA") initial-rating (line "PLAYERB") initial-rating}))
           {}
           results))
 
-(defn invert [s]
-  (if (= s "A") "B" "A"))
+(defn score [outcome]
+  (if (= outcome "D")
+    0.5
+    (if (= outcome "A") 1.0 0.0)))
 
-(defn new-score [current player opponent won]
-  (+  (* 400 (if won 1 -1))
-      (current opponent)))
+(defn new-rating [ratings player opponent score]
+  (let [p-rating (ratings player)
+        o-rating (ratings opponent)
+        expected (/ (+ 1.0 (expt 10.0 (/ (- p-rating o-rating) 400.0))))]
+    (+ p-rating (* k-factor (- score expected)))))
 
 (defn go []
-  (let [results (map parse-line (read-file "/Users/lance/code/elo/sample.txt"))
+  (let [results (map parse-line (read-file "/Users/egamble/clojure/elo/sample.txt"))
         keys (first results)
         results (map (partial assoc-head keys) (rest results))
-        scores (atom (get-scores results))]
+        ratings (atom (init-ratings results))]
     (doseq [game results]
-      (if (nil? (game "outcome"))
-        (let [a (@scores (game "playerA"))
-              b (@scores (game "playerB"))]
-          (swap! scores assoc (game "playerA") b (game "playerB") a))
-        (let [winner-key (game (str "player" (game "outcome")))
-              loser-key (game (str "player" (invert (game "outcome"))))
-              winner-value (new-score @scores winner-key loser-key true)
-              loser-value (new-score @scores loser-key winner-key false)]
-          (swap! scores assoc winner-key winner-value loser-key loser-value))))
-    (prn @scores)))
+      (let [a (game "PLAYERA")
+            b (game "PLAYERB")
+            a-score (score (game "OUTCOME"))
+            a-rating (new-rating @ratings a b a-score)
+            b-rating (new-rating @ratings b a (- 1.0 a-score))]
+        (swap! ratings assoc a a-rating b b-rating)))
+    (prn @ratings)))

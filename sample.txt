@@ -2,7 +2,7 @@ playerB playerA outcome
 justin aaron A
 lance justin A
 chun chris B
-chun chris
+chun chris D
 chun chris A
 chun justin A
 chun justin B
@@ -16,12 +16,12 @@ chris justin B
 justin aaron A
 lance justin A
 chun chris B
-chun chris
+chun chris D
 chun chris A
 chun justin A
 chun justin B
 chun justin A
-chun chris
+chun chris D
 michael aaron B
 michael aaron B
 chris aaron A
@@ -36,12 +36,12 @@ justin eric A
 justin aaron A
 lance justin A
 chun chris B
-chun chris
+chun chris D
 chun chris A
 chun justin A
 chun justin B
 chun justin A
-chun chris
+chun chris D
 michael aaron B
 michael aaron B
 chris aaron A
